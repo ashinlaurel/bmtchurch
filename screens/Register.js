@@ -220,14 +220,7 @@ const Register = async () => {
   );
 };
 
-// export default Register;
-
-// const Register = async () => {
-
-//   return (
-
-//   );
-// };
+export default Register;
 
 const styles = StyleSheet.create({
   registerContainer: {
