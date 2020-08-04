@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { db, auth } from "../firebase/firebase";
+import firebase from "../firebase/firebase";
 
 import {
   StyleSheet,
@@ -15,7 +15,7 @@ import { Images, argonTheme } from "../constants";
 
 const { width, height } = Dimensions.get("screen");
 
-const Register = () => {
+const Register = async () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -34,7 +34,9 @@ const Register = () => {
     // }
     let user = {};
     try {
-      let respone = await auth.createUserWithEmailAndPassword(email, pass);
+      let respone = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, pass);
       user = {
         name: name,
         email: email,
@@ -53,7 +55,9 @@ const Register = () => {
         setErr("Something went Wrong!");
       }
     }
-    db.collection("users")
+    firebase
+      .firestore()
+      .collection("users")
       .doc(user.uid)
       .set(user)
       .then(() => {
@@ -64,27 +68,6 @@ const Register = () => {
       });
 
     // router.push(`/u/${user.uid}/edit`);
-    //add rating doc
-    // let rating = { g: [], n: [], p: [] };
-    // let rated = { uid: [], r: [] };
-    // db.collection("myrating")
-    //   .doc(user.uid)
-    //   .set(rating)
-    //   .then(() => {
-    //     setErr("User Created");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // db.collection("Irated")
-    //   .doc(user.uid)
-    //   .set(rated)
-    //   .then(() => {
-    //     setErr("User Created");
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   };
   return (
     <Block flex middle>
@@ -197,24 +180,24 @@ const Register = () => {
                     </Block>
                   </Block>
                   {/* <Block row width={width * 0.75}>
-                    <Checkbox
-                      checkboxStyle={{
-                        borderWidth: 3,
-                      }}
-                      color={argonTheme.COLORS.PRIMARY}
-                      label="I agree with the"
-                    />
-                    <Button
-                      style={{ width: 100 }}
-                      color="transparent"
-                      textStyle={{
-                        color: argonTheme.COLORS.PRIMARY,
-                        fontSize: 14,
-                      }}
-                    >
-                      Privacy Policy
-                    </Button>
-                  </Block> */}
+                  <Checkbox
+                    checkboxStyle={{
+                      borderWidth: 3,
+                    }}
+                    color={argonTheme.COLORS.PRIMARY}
+                    label="I agree with the"
+                  />
+                  <Button
+                    style={{ width: 100 }}
+                    color="transparent"
+                    textStyle={{
+                      color: argonTheme.COLORS.PRIMARY,
+                      fontSize: 14,
+                    }}
+                  >
+                    Privacy Policy
+                  </Button>
+                </Block> */}
                   <Block middle>
                     <Button
                       color="primary"
@@ -236,6 +219,15 @@ const Register = () => {
     </Block>
   );
 };
+
+// export default Register;
+
+// const Register = async () => {
+
+//   return (
+
+//   );
+// };
 
 const styles = StyleSheet.create({
   registerContainer: {
@@ -289,5 +281,3 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
 });
-
-export default Register;
